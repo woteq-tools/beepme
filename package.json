@@ -1,0 +1,17 @@
+{
+  "name": "geofence-beep",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Android-installable PWA that beeps and vibrates when you enter a circular geofence.",
+  "scripts": {
+    "start": "node server.js",
+    "start:https": "node server.js --https",
+    "icons": "python3 tools/make-icons.py",
+    "check": "node tools/check.js",
+    "test": "node tools/smoke-test.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

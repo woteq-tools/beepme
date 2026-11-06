@@ -1,0 +1,54 @@
+name: Deploy to GitHub Pages
+
+# Pushes to main are published automatically.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two deployments at the same time.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Pages
+        uses: actions/configure-pages@v5
+        with:
+          # Turn Pages on for the repository if it is not on yet.
+          enablement: true
+
+      # Only the files the app actually needs are published.
+      # Everything uses relative paths, so the app also works from a subpath.
+      - name: Stage the app
+        run: |
+          mkdir -p _site/css _site/js _site/icons _site/vendor/leaflet/images
+          cp index.html manifest.json sw.js .nojekyll _site/
+          cp css/*.css _site/css/
+          cp js/*.js _site/js/
+          cp icons/*.png _site/icons/
+          cp vendor/leaflet/leaflet.js vendor/leaflet/leaflet.css _site/vendor/leaflet/
+          cp vendor/leaflet/images/*.png _site/vendor/leaflet/images/
+
+      - name: Upload the artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

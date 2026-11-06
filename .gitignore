@@ -1,0 +1,9 @@
+# Generated self-signed certificates for the dev server
+certs/
+
+# Dependencies / tooling
+node_modules/
+
+# OS noise
+.DS_Store
+Thumbs.db
